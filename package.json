@@ -1,0 +1,15 @@
+{
+  "name": "tw4",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TW4 is a lightweight REST API for tracking documentation tasks.",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "healthcheck": "node src/healthcheck.js"
+  },
+  "license": "MIT"
+}

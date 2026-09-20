@@ -1,8 +1,8 @@
 node_modules
-npm-debug.log*
+.git
 .env
 .env.local
 data/tasks.json
-.DS_Store
-Thumbs.db
-*.log
+npm-debug.log*
+README.md
+LICENSE
