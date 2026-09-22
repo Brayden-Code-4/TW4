@@ -6,6 +6,18 @@ const sidebars = {
     'quickstart',
     'installation',
     'user-guide',
+    {
+      type: 'category',
+      label: 'Developer guide',
+      items: [
+        'developer/overview',
+        'developer/integrate',
+        'developer/configure',
+        'developer/code-reference',
+        'developer/extend',
+        'developer/writers',
+      ],
+    },
   ],
 };
 

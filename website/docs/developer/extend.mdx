@@ -1,0 +1,29 @@
+---
+sidebar_position: 5
+title: Extend
+---
+
+# Extend TW4
+
+You don't need a plugin system. Change `src/server.js` or wrap the HTTP API.
+
+## Wrap a tiny SDK
+
+Put `createTask` / `listTasks` in `lib/tw4.js` and reuse it. Keep the key out of git. That's the "SDK": your module, your rules.
+
+## Add a field (example: `assignee`)
+
+1. Accept `body.assignee` in POST / PATCH (string, optional).
+2. Store it on the task object.
+3. Don't break old clients: missing field is fine.
+4. Tell whoever writes the docs **before** you merge. They need the new name, type, and one sample payload.
+
+## Add a route
+
+Copy an existing `if (method === ...)` block. Keep `send()` so the content-type stays JSON. If the path has an id, reuse the UUID regex or GET/PATCH will 404 on "normal" slugs.
+
+## Don't
+
+- Add npm packages unless you really need them. The current server has zero runtime deps on purpose.
+- Switch the store to a real DB in the same PR as a feature. Do the file first, migrate later.
+- Return HTML from a new error path. Clients already parse JSON `error` + `message`.
