@@ -1,14 +1,14 @@
 ---
 sidebar_position: 8
-title: PATCH /api/v1/tasks/{id}
+title: PATCH / PUT /api/v1/tasks/{id}
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# PATCH /api/v1/tasks/\{id\}
+# PATCH / PUT /api/v1/tasks/\{id\}
 
-Update a task. `PUT` hits the same handler. Needs `X-API-Key`. Send only the fields you change.
+Update a task. `PUT` hits the same handler as `PATCH`. Needs `X-API-Key`. Send only the fields you change.
 
 ## Parameters
 
@@ -70,6 +70,18 @@ req = urllib.request.Request(
 with urllib.request.urlopen(req) as r:
     print(json.load(r)["data"]["status"])
 ```
+
+</TabItem>
+<TabItem value="put" label="PUT">
+
+```bash
+curl -X PUT http://127.0.0.1:3000/api/v1/tasks/78cb84f4-f939-4729-8c7b-2e3fddedd05b \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-now" \
+  --data-binary '{"status":"done"}'
+```
+
+Same body rules as PATCH. The server does not require a full resource on PUT.
 
 </TabItem>
 </Tabs>

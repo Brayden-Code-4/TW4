@@ -20,4 +20,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.heroLead {
+  max-width: 40rem;
+  margin: 0 auto 1.5rem;
+  font-size: 1.1rem;
 }

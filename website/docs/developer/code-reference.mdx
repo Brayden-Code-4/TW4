@@ -55,13 +55,13 @@ Bad body → `400` `validation_error`. Broken JSON → `400` `invalid_json`.
 | `PATCH` / `PUT` | `/api/v1/tasks/:id` | Same handler |
 | `DELETE` | `/api/v1/tasks/:id` | `{ data, deleted: true }` |
 
-If the id don't match `[0-9a-fA-F-]{36}`, the request never enters the task handler and you get a generic `404` (`No route for …`).
+If the id does not match `[0-9a-fA-F-]{36}`, the request never enters the task handler and you get a generic `404` (`No route for …`).
 
 `GET /api/v1/tasks?status=foo` → `400` `invalid_query`.
 
 ## Store
 
-`loadTasks` / `saveTasks` read and write the JSON file on every request. Fine for local use. Don't point two processes at the same file and expect locks. There are none.
+`loadTasks` / `saveTasks` read and write the JSON file on every request. Fine for local use. Do not point two processes at the same file and expect locks. There are none.
 
 ## Task shape
 

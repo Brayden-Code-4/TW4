@@ -16,11 +16,19 @@ function HomepageHeader() {
           {siteConfig.title}
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <p className={styles.heroLead}>
+          TW4 is our group&apos;s task API. This is the codebase we document.
+        </p>
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
             to="/docs/quickstart">
-            Start the 30-minute guide
+            Quickstart (10–15 min)
+          </Link>
+          <Link
+            className="button button--outline button--secondary button--lg"
+            to="/docs/about">
+            What / who / why
           </Link>
         </div>
       </div>
@@ -33,7 +41,7 @@ export default function Home() {
   return (
     <Layout
       title={siteConfig.title}
-      description="Install TW4 and manage documentation tasks from a small REST API.">
+      description="TW4 is our group's task API. Clone it, run it locally, call HTTP.">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

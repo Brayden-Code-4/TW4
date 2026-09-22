@@ -4,7 +4,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'TW4',
-  tagline: 'A small REST API for documentation tasks',
+  tagline: "Our group's task API — this is the codebase we document",
   favicon: 'img/favicon.ico',
 
   future: {
@@ -71,6 +71,11 @@ const config = {
         },
         items: [
           {
+            to: '/docs/about',
+            label: 'About',
+            position: 'left',
+          },
+          {
             type: 'docSidebar',
             sidebarId: 'docsSidebar',
             position: 'left',
@@ -104,11 +109,13 @@ const config = {
           {
             title: 'Docs',
             items: [
+              {label: 'About', to: '/docs/about'},
               {label: 'Quickstart', to: '/docs/quickstart'},
               {label: 'Installation', to: '/docs/installation'},
               {label: 'User guide', to: '/docs/user-guide'},
               {label: 'Developers', to: '/docs/developer/overview'},
               {label: 'API', to: '/docs/api/overview'},
+              {label: 'OpenAPI', to: '/docs/api/openapi'},
               {label: 'Blog', to: '/blog'},
             ],
           },

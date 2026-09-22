@@ -5,11 +5,11 @@ title: User guide
 
 # Use the TW4 API
 
-The API is already running (see [Installation](/docs/installation)). This page is only about calling it.
+How-to page. The API is already running (see [Installation](/docs/installation)). For method tables, status codes and OpenAPI, use the [API reference](/docs/api/overview) — do not demo both pages in a row; they repeat the same curls.
 
 Base URL on your machine: `http://127.0.0.1:3000`.
 
-Reads are open. Creates, updates and deletes need header `X-API-Key`, same value as `API_KEY` in `.env`.
+Reads are open. Creates, updates and deletes need header `X-API-Key`, same value as `API_KEY` in `.env`. Treat that as **local only**: anyone who reaches the port can list the backlog.
 
 ## Health
 
@@ -19,47 +19,26 @@ curl http://127.0.0.1:3000/health
 
 `"status":"ok"` means the process is up. It does not mean your key is valid.
 
-## List tasks
+## List and filter
 
 ```bash
 curl http://127.0.0.1:3000/api/v1/tasks
-```
-
-Optional filter:
-
-```bash
 curl "http://127.0.0.1:3000/api/v1/tasks?status=todo"
 ```
 
 `status` must be `todo`, `doing` or `done`. Anything else returns `400`.
 
-## Get one task
+Get one task: `GET /api/v1/tasks/<TASK_ID>`. Unknown id → `404`. The id must be a UUID, not `1`.
 
-```bash
-curl http://127.0.0.1:3000/api/v1/tasks/<TASK_ID>
-```
+## Create, update, delete
 
-Unknown id → `404`.
+Full snippets (cURL, JavaScript, Python) live on:
 
-## Create
+- [POST /api/v1/tasks](/docs/api/create-task)
+- [PATCH and PUT /api/v1/tasks/\{id\}](/docs/api/update-task)
+- [DELETE /api/v1/tasks/\{id\}](/docs/api/delete-task)
 
-```bash
-curl -s -X POST http://127.0.0.1:3000/api/v1/tasks \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: change-me-now" \
-  --data-binary '{"title":"Review the installation page","status":"todo"}'
-```
-
-PowerShell:
-
-```powershell
-$body = @{ title = "Review the installation page"; status = "todo" } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/api/v1/tasks -ContentType "application/json" -Headers @{ "X-API-Key" = "change-me-now" } -Body $body
-```
-
-`title` is required. `status` defaults to `todo`.
-
-## Update
+Minimal PATCH (PowerShell users: see the create page for `ConvertTo-Json`):
 
 ```bash
 curl -X PATCH http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
@@ -68,16 +47,7 @@ curl -X PATCH http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
   --data-binary '{"status":"doing"}'
 ```
 
-You can send `title`, `status`, or both.
-
-## Delete
-
-```bash
-curl -X DELETE http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
-  -H "X-API-Key: change-me-now"
-```
-
-The body comes back with `"deleted": true`.
+`PUT` is the same handler. Send only the fields you change.
 
 ## Errors you will actually hit
 

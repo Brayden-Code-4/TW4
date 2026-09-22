@@ -3,22 +3,30 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen?logo=node.js)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker)](https://www.docker.com/)
+[![CI](https://github.com/Brayden-Code-4/TW4/actions/workflows/ci.yml/badge.svg)](https://github.com/Brayden-Code-4/TW4/actions/workflows/ci.yml)
+[![Docs](https://github.com/Brayden-Code-4/TW4/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/Brayden-Code-4/TW4/actions/workflows/deploy-docs.yml)
 
-TW4 is a small REST API for documentation tasks (`todo`, `doing`, `done`). This README explain how to get it running on your machine in a few minutes, with Node or Docker.
+**TW4 is our group's task API. This repository is the codebase we document.** It is not Appwrite, n8n, or another hosted product. You clone this repo, you start the process, you call HTTP.
+
+This README explain how to get it running on your machine in a few minutes, with Node or Docker.
 
 Repo: [github.com/Brayden-Code-4/TW4](https://github.com/Brayden-Code-4/TW4)
 
-Docs: [brayden-code-4.github.io/TW4](https://brayden-code-4.github.io/TW4/)
+Live docs: [brayden-code-4.github.io/TW4](https://brayden-code-4.github.io/TW4/)
+
+If that URL is 404, open [Settings → Pages](https://github.com/Brayden-Code-4/TW4/settings/pages) and set **Deploy from a branch** → `gh-pages` / `/` (or **GitHub Actions**). The workflow already publishes the site on every push to `main`.
 
 ## Overview
 
-Nothing fancy: no database, no extra packages. Tasks are saved in `data/tasks.json`. You can script it with `curl`. Writes need an `X-API-Key` header.
+Nothing fancy: no database, no extra packages. Tasks are saved in `data/tasks.json`. You can script it with `curl`. Writes need an `X-API-Key` header. GET list and GET one task do **not** check the key. That is intentional for a local demo. Do not bind this process to the public internet.
+
+The JSON store is one process, one file, no lock. Two writers on the same file will race. Fine on a laptop. Not a multi-user backend.
 
 | | |
 | --- | --- |
 | Runtime | Node.js 20+ |
-| Data | JSON file |
-| Auth | `X-API-Key` on POST / PATCH / DELETE |
+| Data | JSON file (`data/tasks.json`) |
+| Auth | `X-API-Key` on POST / PATCH / PUT / DELETE |
 
 | Method | Path | Auth |
 | --- | --- | --- |
@@ -27,7 +35,10 @@ Nothing fancy: no database, no extra packages. Tasks are saved in `data/tasks.js
 | `GET` | `/api/v1/tasks/:id` | No |
 | `POST` | `/api/v1/tasks` | Yes |
 | `PATCH` | `/api/v1/tasks/:id` | Yes |
+| `PUT` | `/api/v1/tasks/:id` | Yes (same handler as PATCH) |
 | `DELETE` | `/api/v1/tasks/:id` | Yes |
+
+OpenAPI: [`website/static/openapi.yaml`](website/static/openapi.yaml)
 
 ## Prerequisites
 
@@ -68,7 +79,7 @@ PowerShell:
 Copy-Item .env.example .env
 ```
 
-Put your own value in `API_KEY`. Keep `PORT=3000` unless that port is already taken.
+Put your own value in `API_KEY`. The example `change-me-now` is for local work only. Keep `PORT=3000` unless that port is already taken.
 
 ### 3. Start
 
@@ -97,9 +108,15 @@ curl http://127.0.0.1:3000/health
 
 You should get JSON with `"status":"ok"`.
 
+```bash
+npm test
+```
+
+`npm test` starts a throwaway process on port 3456, hits `/health` and a write cycle, then stops it.
+
 ## Installation (Docker)
 
-Same clone + `.env` as above. You don't need Node on the host for this way.
+Same clone + `.env` as above. You do not need Node on the host for this way.
 
 ```bash
 docker compose up --build
@@ -128,9 +145,11 @@ docker run --rm -p 3000:3000 -e API_KEY=change-me-now --name tw4-api tw4-api:1.0
 
 Stop with `Ctrl+C`, then `docker compose down`.
 
+CI also builds the image and curls `/health` inside GitHub Actions (see `.github/workflows/ci.yml`).
+
 ## Quickstart
 
-API already running on port 3000. Replace `change-me-now` by the `API_KEY` from your `.env`.
+API already running on port 3000. Replace `change-me-now` with the `API_KEY` from your `.env`.
 
 ```bash
 curl http://127.0.0.1:3000/health
@@ -164,9 +183,16 @@ curl -X PATCH http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
   -H "X-API-Key: change-me-now" \
   --data-binary '{"status":"doing"}'
 
+curl -X PUT http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-now" \
+  --data-binary '{"status":"done"}'
+
 curl -X DELETE http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
   -H "X-API-Key: change-me-now"
 ```
+
+`PUT` and `PATCH` share the same handler.
 
 ## Configuration
 
@@ -183,27 +209,48 @@ Copy `.env.example` → `.env`. `npm start` reads it. Compose uses `API_KEY`, `P
 
 Bad or missing key → `401`. Empty `API_KEY` in env → `500`.
 
+## Limits (read this before a demo)
+
+- **Local only.** Anyone who can reach the port can `GET` the backlog. Say that in the presentation.
+- **Example key.** `API_KEY=change-me-now` is in `.env.example` on purpose. Change it on a shared machine.
+- **JSON file.** One process. No lock. No concurrent users.
+- **No cloud.** There is no TW4 SaaS account. The live site is documentation only.
+
 ## Layout
 
 ```text
 TW4/
 ├── README.md
+├── CONTRIBUTORS.md
 ├── LICENSE
 ├── .env.example
 ├── Dockerfile
 ├── docker-compose.yml
 ├── package.json
 ├── data/
-└── src/
-    ├── server.js
-    └── healthcheck.js
+├── src/
+│   ├── server.js
+│   └── healthcheck.js
+├── test/
+│   └── api.test.js
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── deploy-docs.yml
+└── website/                 # Docusaurus site (docs, API, blog)
+    ├── docs/
+    ├── blog/
+    ├── static/openapi.yaml
+    └── syndication-devto.md
 ```
 
 ## Contributing
 
-Fork, branch (`git checkout -b feat/whatever`), copy `.env`, run `npm start`, hit `/health`. Keep responses as JSON and don't add packages unless you really need it.
+Fork, branch (`git checkout -b feat/whatever`), copy `.env`, run `npm start`, hit `/health`, then `npm test`. Keep responses as JSON and do not add packages unless you really need it.
 
 Open a pull request that says what you changed. If something don't work, open an issue with the request, the status code and the body.
+
+Group names: see [CONTRIBUTORS.md](CONTRIBUTORS.md). Add your GitHub handle in a PR if you are on the team sheet.
 
 ## License
 

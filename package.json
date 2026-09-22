@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "healthcheck": "node src/healthcheck.js"
+    "healthcheck": "node src/healthcheck.js",
+    "test": "node test/api.test.js"
   },
   "license": "MIT"
 }

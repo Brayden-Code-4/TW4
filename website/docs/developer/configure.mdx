@@ -20,13 +20,13 @@ Copy `.env.example`. `npm start` loads the file if the variable is not already i
 | `LOG_LEVEL` | `info` | `error` / `warn` / `info` / `debug` |
 | `NODE_ENV` | `development` | Echoed on `/health` |
 
-Replace the example key by a long random string before you share a machine. Compose reads `API_KEY`, `PORT` and `LOG_LEVEL` from `.env`.
+Replace the example key with a long random string before you share a machine. Compose reads `API_KEY`, `PORT` and `LOG_LEVEL` from `.env`.
 
-Header name is `X-API-Key`. Node lowercases it to `x-api-key`. Don't send `Authorization: Bearer` — the server ignores it.
+Header name is `X-API-Key`. Node lowercases it to `x-api-key`. Do not send `Authorization: Bearer` — the server ignores it.
 
 ## Your app
 
-Suggested names so they don't clash with the server's own `API_KEY` if both run in the same shell:
+Suggested names so they do not clash with the server's own `API_KEY` if both run in the same shell:
 
 ```bash
 export TW4_URL=http://127.0.0.1:3000

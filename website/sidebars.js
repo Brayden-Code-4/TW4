@@ -3,6 +3,7 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   docsSidebar: [
+    'about',
     'quickstart',
     'installation',
     'user-guide',
@@ -25,6 +26,7 @@ const sidebars = {
         'api/overview',
         'api/authentication',
         'api/status-codes',
+        'api/openapi',
         'api/health',
         'api/list-tasks',
         'api/get-task',

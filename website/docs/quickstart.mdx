@@ -3,9 +3,9 @@ sidebar_position: 1
 title: Quickstart
 ---
 
-# Get a task into TW4 in 30 minutes
+# Get a task into TW4 in 10–15 minutes
 
-This tutorial explain how to go from an empty folder to a task stored in TW4. Follow the steps in order. Don't skip the checks.
+This tutorial walks from an empty folder to a task you can list, filter, update and delete. Follow the steps in order. Do not skip the checks.
 
 ## What you will do
 
@@ -14,9 +14,9 @@ When you finish, you will be able to:
 - run TW4 on your computer
 - call `/health`
 - create one task with an API key
-- list that task
+- filter the list, then PATCH, PUT and DELETE that task
 
-Time: about 20 to 30 minutes.
+Time: about 10 to 15 minutes.
 
 ## What you need
 
@@ -38,7 +38,7 @@ npm -v
 
 Node must print `v20` or higher.
 
-You also need a second terminal window. TW4 stay in the first one while you send requests in the second.
+You also need a second terminal window. TW4 keeps running in the first one while you send requests in the second.
 
 :::note
 This path uses Node, not Docker. For Docker, see [Installation](/docs/installation).
@@ -51,7 +51,7 @@ git clone https://github.com/Brayden-Code-4/TW4.git
 cd TW4
 ```
 
-You should see `README.md`, `package.json` and a `src` folder.
+You should see `README.md`, `package.json`, `src` and `website`.
 
 ## 2. Copy the env file
 
@@ -65,7 +65,7 @@ PowerShell:
 Copy-Item .env.example .env
 ```
 
-Open `.env`. Leave `PORT=3000`. You can keep `API_KEY=change-me-now` for this tutorial, or replace the example key by yours.
+Open `.env`. Leave `PORT=3000`. You can keep `API_KEY=change-me-now` for this tutorial, or replace the example key with yours.
 
 ## 3. Start the API
 
@@ -128,9 +128,49 @@ curl http://127.0.0.1:3000/api/v1/tasks
 
 You should see `"count": 1` (or more) and your title in `data`.
 
+List is **not** authenticated. Anyone who can reach port 3000 can see the backlog. That is a local-demo choice, not a bug.
+
+## 7. Filter by status
+
+```bash
+curl "http://127.0.0.1:3000/api/v1/tasks?status=todo"
+```
+
+`?status=wip` returns `400`. Allowed values: `todo`, `doing`, `done`.
+
+## 8. Update with PATCH, then PUT
+
+Replace `<TASK_ID>` with the UUID from step 5.
+
+```bash
+curl -X PATCH http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-now" \
+  --data-binary '{"status":"doing"}'
+```
+
+`PUT` uses the same handler:
+
+```bash
+curl -X PUT http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-now" \
+  --data-binary '{"status":"done"}'
+```
+
+## 9. Delete the task
+
+```bash
+curl -X DELETE http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
+  -H "X-API-Key: change-me-now"
+```
+
+You should see `"deleted": true`. A second GET of that id returns `404`.
+
 ## You are done
 
-You cloned TW4, started it, and created a task. Next:
+You cloned TW4, started it, created a task, filtered, updated twice, and deleted it. Next:
 
 - [Installation](/docs/installation) if you want Docker or more env details
-- [User guide](/docs/user-guide) for list filters, update and delete
+- [User guide](/docs/user-guide) for day-to-day how-tos
+- [API reference](/docs/api/overview) for status codes and OpenAPI

@@ -7,15 +7,15 @@ title: Authentication
 
 TW4 does not use OAuth or JWT. One shared secret: `API_KEY` in `.env`, sent as header `X-API-Key`.
 
-GET `/health` and GET `/api/v1/tasks` do not check it. POST, PATCH, PUT and DELETE do.
+GET `/health` and GET `/api/v1/tasks` (list and one item) do not check it. That is a local-demo choice: anyone who reaches the port can read the backlog. POST, PATCH, PUT and DELETE do check the key.
 
-The examples below use the default key, replace it by your own if you changed `.env`.
+The examples below use the default key. Replace it with your own if you changed `.env`.
 
 ```http
 X-API-Key: change-me-now
 ```
 
-If the header don't match, you get `401`:
+If the header does not match, you get `401`:
 
 ```json
 {"error":"unauthorized","message":"Missing or invalid X-API-Key header."}

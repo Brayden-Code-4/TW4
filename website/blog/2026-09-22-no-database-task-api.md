@@ -5,7 +5,7 @@ authors: [joseph]
 tags: [tw4, nodejs, docker]
 ---
 
-This article explain why TW4 is a one-file HTTP API with a JSON store, how a request actually moves through the process, and how to run the same thing on Node or in Docker. If you are about to add Redis "just in case", read this first.
+This article explains why TW4 is a one-file HTTP API with a JSON store, how a request actually moves through the process, and how to run the same thing on Node or in Docker. If you are about to add Redis "just in case", read this first.
 
 {/* truncate */}
 
@@ -15,7 +15,7 @@ I wanted a small backlog for documentation work: a title, a status (`todo` / `do
 
 That stack is fine when you have users and backups. It is not fine when you just need `curl` to create a row in under five minutes. The extra moving parts also make the docs worse. You start explaining migrations before the reader has a `200` on `/health`.
 
-TW4 is the other extreme on purpose: Node's `http` module, no npm dependencies at runtime, one JSON file on disk. The process stay simple enough that the README, the install guide and the API pages can tell the same story.
+TW4 is the other extreme on purpose: Node's `http` module, no npm dependencies at runtime, one JSON file on disk. The process stays simple enough that the README, the install guide and the API pages can tell the same story.
 
 Repo: [github.com/Brayden-Code-4/TW4](https://github.com/Brayden-Code-4/TW4).
 
@@ -70,7 +70,7 @@ Two details that ate time when I documented the API:
 
 ## Run it natively
 
-Node 20 or newer. Copy `.env.example` to `.env` and replace the example key by yours if you share the machine.
+Node 20 or newer. Copy `.env.example` to `.env` and replace the example key with yours if you share the machine.
 
 ```bash
 git clone https://github.com/Brayden-Code-4/TW4.git
@@ -99,14 +99,14 @@ PowerShell users: do not paste the JSON inside `{ }` as a script block. Use `Con
 
 ## Same API in Docker
 
-If you don't want Node on the host:
+If you do not want Node on the host:
 
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
 
-Compose publishes port 3000, mounts a named volume on `/app/data`, and hits `/health` as a healthcheck. `HOST` inside the container must stay `0.0.0.0` or the port mapping never reaches the process.
+Compose publishes port 3000, mounts a named volume on `/app/data`, and hits `/health` as a healthcheck. `HOST` inside the container must remain `0.0.0.0` or the port mapping never reaches the process.
 
 The client commands do not change. `http://127.0.0.1:3000/health` is still the check. That is the point of a small HTTP API: one contract, two ways to start the process.
 
@@ -114,17 +114,17 @@ The client commands do not change. `http://127.0.0.1:3000/health` is still the c
 
 Document the auth header, the three statuses, the UUID rule, and the empty-`API_KEY` → `500` case. Those are the four things that fail on a clean clone.
 
-Don't document Express middleware, ORMs, or "how to scale to Kubernetes" for this repo. You would be writing fiction. If the store becomes SQLite later, add a page then. Until that commit exists, a JSON file is the architecture.
+Do not document Express middleware, ORMs, or "how to scale to Kubernetes" for this repo. You would be writing fiction. If the store becomes SQLite later, add a page then. Until that commit exists, a JSON file is the architecture.
 
 A tiny client is enough as an SDK. Node 20 `fetch` and Python `urllib` both work. Keep the key in `TW4_API_KEY` in the caller so it does not clash with the server's own `API_KEY` if you run both in the same shell.
 
-If something still look wrong after `/health` is ok, check the key first, then the JSON body, then whether the id is a real UUID. In that order. Most "the API is down" reports are one of those three.
+If something still looks wrong after `/health` is ok, check the key first, then the JSON body, then whether the id is a real UUID. In that order. Most "the API is down" reports are one of those three.
 
 ## Why this is easier to explain than a "real" backend
 
 When I wrote the install pages, the native path and the Docker path could share the same `curl` examples. That only works if the public contract is HTTP. The moment you document "run `psql` then `npm run migrate`", you split the audience in two and you maintain two truths.
 
-The JSON file also force you to be honest in the architecture page. You cannot hide behind "the database handles consistency". You have to say: one writer, one file, reload on every request. Readers who need more can fork. Readers who need less can finish in thirty minutes.
+The JSON file also forces you to be honest in the architecture page. You cannot hide behind "the database handles consistency". You have to say: one writer, one file, reload on every request. Readers who need more can fork. Readers who need less can finish in fifteen minutes.
 
 I would still add a `GET /api/v1/tasks/:id` example with a fake short id (`1`) in the troubleshooting table. It is the fastest way to show the UUID regex. One failed command in the docs is worth a paragraph of theory.
 

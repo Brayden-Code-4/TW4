@@ -1,0 +1,32 @@
+---
+sidebar_position: 0
+title: About TW4
+---
+
+# About TW4
+
+**TW4 is our group's task API. This repository is the codebase we document.** It is not Appwrite, n8n or a hosted SaaS. You clone it, you run it, you call HTTP.
+
+## What is the platform?
+
+A small REST service for a writing backlog. Each item has a title and a status (`todo`, `doing`, `done`). Data lives in `data/tasks.json`. There is no cloud account.
+
+## Who uses it?
+
+Developers and technical writers who want a local tracker they can script with `curl`, Node `fetch` or Python `urllib`. One person on one machine is the intended setup.
+
+## Why the documentation matters
+
+Without docs, you guess the header name (`X-API-Key`), the three statuses, and the UUID rule on `/tasks/{id}`. Those three details are what fail on a clean clone. The pages exist so a teammate can install and create a task without pinging you.
+
+## Group
+
+Lead on this repo: [NABOUDJA Tchapo Joseph](https://github.com/Brayden-Code-4). Other members of the TW4Tech group should add their GitHub handle in a pull request (see [CONTRIBUTORS.md](https://github.com/Brayden-Code-4/TW4/blob/main/CONTRIBUTORS.md)).
+
+Subject-matter interview for the developer guide: **NABOUDJA Tchapo Joseph**, who maintains `src/server.js` on this repo.
+
+Mentors: use the TW4Tech mentor assigned to this group before the Friday 25 September 2026 review. There is a report per group; names on the team sheet should also appear here or in git history.
+
+## Local only
+
+Do not put this process on the public internet. List and get are **not** authenticated. The example key `change-me-now` is for local demos. Change `API_KEY` on any shared machine. The JSON file has no lock: one process, not several users.
