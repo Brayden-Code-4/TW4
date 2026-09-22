@@ -8,6 +8,8 @@ TW4 is a small REST API for documentation tasks (`todo`, `doing`, `done`). This 
 
 Repo: [github.com/Brayden-Code-4/TW4](https://github.com/Brayden-Code-4/TW4)
 
+Docs: [brayden-code-4.github.io/TW4](https://brayden-code-4.github.io/TW4/)
+
 ## Overview
 
 Nothing fancy: no database, no extra packages. Tasks are saved in `data/tasks.json`. You can script it with `curl`. Writes need an `X-API-Key` header.

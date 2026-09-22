@@ -1,0 +1,136 @@
+---
+sidebar_position: 1
+title: Quickstart
+---
+
+# Get a task into TW4 in 30 minutes
+
+This tutorial explain how to go from an empty folder to a task stored in TW4. Follow the steps in order. Don't skip the checks.
+
+## What you will do
+
+When you finish, you will be able to:
+
+- run TW4 on your computer
+- call `/health`
+- create one task with an API key
+- list that task
+
+Time: about 20 to 30 minutes.
+
+## What you need
+
+Exact versions that work with this guide:
+
+| Tool | Version |
+| --- | --- |
+| Git | 2.40 or newer |
+| Node.js | **20.0 or newer** (21 and 24 are fine) |
+| npm | 10 or newer (it comes with Node) |
+
+Check:
+
+```bash
+git --version
+node -v
+npm -v
+```
+
+Node must print `v20` or higher.
+
+You also need a second terminal window. TW4 stay in the first one while you send requests in the second.
+
+:::note
+This path uses Node, not Docker. For Docker, see [Installation](/docs/installation).
+:::
+
+## 1. Clone the repo
+
+```bash
+git clone https://github.com/Brayden-Code-4/TW4.git
+cd TW4
+```
+
+You should see `README.md`, `package.json` and a `src` folder.
+
+## 2. Copy the env file
+
+```bash
+cp .env.example .env
+```
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Open `.env`. Leave `PORT=3000`. You can keep `API_KEY=change-me-now` for this tutorial, or replace the example key by yours.
+
+## 3. Start the API
+
+```bash
+npm install
+npm start
+```
+
+Wait until you see:
+
+```text
+TW4 API listening on http://0.0.0.0:3000
+```
+
+Do not close this terminal.
+
+## 4. Ping health
+
+In the **other** terminal:
+
+```bash
+curl http://127.0.0.1:3000/health
+```
+
+You should get something like:
+
+```json
+{"status":"ok","service":"tw4","environment":"development","uptime_seconds":2}
+```
+
+If curl fails with "connection refused", the server is not up yet. Go back to step 3.
+
+## 5. Create a task
+
+Git Bash / macOS / Linux:
+
+```bash
+curl -s -X POST http://127.0.0.1:3000/api/v1/tasks \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-now" \
+  --data-binary '{"title":"Write the user guide","status":"todo"}'
+```
+
+PowerShell (do not paste the bash JSON line, PowerShell eats the braces):
+
+```powershell
+$body = @{ title = "Write the user guide"; status = "todo" } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/api/v1/tasks -ContentType "application/json" -Headers @{ "X-API-Key" = "change-me-now" } -Body $body
+```
+
+A good answer has an `id` and `"status":"todo"`. Copy the `id`.
+
+`401` means the key in the header does not match `.env`.
+
+## 6. List tasks
+
+```bash
+curl http://127.0.0.1:3000/api/v1/tasks
+```
+
+You should see `"count": 1` (or more) and your title in `data`.
+
+## You are done
+
+You cloned TW4, started it, and created a task. Next:
+
+- [Installation](/docs/installation) if you want Docker or more env details
+- [User guide](/docs/user-guide) for list filters, update and delete

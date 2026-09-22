@@ -1,0 +1,89 @@
+---
+sidebar_position: 3
+title: User guide
+---
+
+# Use the TW4 API
+
+The API is already running (see [Installation](/docs/installation)). This page is only about calling it.
+
+Base URL on your machine: `http://127.0.0.1:3000`.
+
+Reads are open. Creates, updates and deletes need header `X-API-Key`, same value as `API_KEY` in `.env`.
+
+## Health
+
+```bash
+curl http://127.0.0.1:3000/health
+```
+
+`"status":"ok"` means the process is up. It does not mean your key is valid.
+
+## List tasks
+
+```bash
+curl http://127.0.0.1:3000/api/v1/tasks
+```
+
+Optional filter:
+
+```bash
+curl "http://127.0.0.1:3000/api/v1/tasks?status=todo"
+```
+
+`status` must be `todo`, `doing` or `done`. Anything else returns `400`.
+
+## Get one task
+
+```bash
+curl http://127.0.0.1:3000/api/v1/tasks/<TASK_ID>
+```
+
+Unknown id → `404`.
+
+## Create
+
+```bash
+curl -s -X POST http://127.0.0.1:3000/api/v1/tasks \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-now" \
+  --data-binary '{"title":"Review the installation page","status":"todo"}'
+```
+
+PowerShell:
+
+```powershell
+$body = @{ title = "Review the installation page"; status = "todo" } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3000/api/v1/tasks -ContentType "application/json" -Headers @{ "X-API-Key" = "change-me-now" } -Body $body
+```
+
+`title` is required. `status` defaults to `todo`.
+
+## Update
+
+```bash
+curl -X PATCH http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-now" \
+  --data-binary '{"status":"doing"}'
+```
+
+You can send `title`, `status`, or both.
+
+## Delete
+
+```bash
+curl -X DELETE http://127.0.0.1:3000/api/v1/tasks/<TASK_ID> \
+  -H "X-API-Key: change-me-now"
+```
+
+The body comes back with `"deleted": true`.
+
+## Errors you will actually hit
+
+| Code | When |
+| --- | --- |
+| `400` | Bad JSON, empty title, or a status that is not allowed |
+| `401` | Missing or wrong `X-API-Key` |
+| `404` | Wrong path or unknown task id |
+| `500` | `API_KEY` is empty in the environment |
