@@ -20,6 +20,11 @@ const config = {
 
   onBrokenLinks: 'throw',
 
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -34,7 +39,16 @@ const config = {
           sidebarPath: './sidebars.js',
           editUrl: 'https://github.com/Brayden-Code-4/TW4/tree/main/website/',
         },
-        blog: false,
+        blog: {
+          showReadingTime: true,
+          feedOptions: {
+            type: ['rss', 'atom'],
+            xslt: true,
+          },
+          onInlineTags: 'warn',
+          onInlineAuthors: 'warn',
+          onUntruncatedBlogPosts: 'ignore',
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -73,6 +87,11 @@ const config = {
             position: 'left',
           },
           {
+            to: '/blog',
+            label: 'Blog',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/Brayden-Code-4/TW4',
             label: 'GitHub',
             position: 'right',
@@ -90,6 +109,7 @@ const config = {
               {label: 'User guide', to: '/docs/user-guide'},
               {label: 'Developers', to: '/docs/developer/overview'},
               {label: 'API', to: '/docs/api/overview'},
+              {label: 'Blog', to: '/blog'},
             ],
           },
           {
