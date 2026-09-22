@@ -18,6 +18,21 @@ const sidebars = {
         'developer/writers',
       ],
     },
+    {
+      type: 'category',
+      label: 'API reference',
+      items: [
+        'api/overview',
+        'api/authentication',
+        'api/status-codes',
+        'api/health',
+        'api/list-tasks',
+        'api/get-task',
+        'api/create-task',
+        'api/update-task',
+        'api/delete-task',
+      ],
+    },
   ],
 };
 

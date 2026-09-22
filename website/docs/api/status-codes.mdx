@@ -1,0 +1,22 @@
+---
+sidebar_position: 3
+title: Status codes
+---
+
+# Status codes
+
+Same JSON envelope for errors: `error` (machine name) + `message` (human).
+
+| Code | `error` | When |
+| --- | --- | --- |
+| `200` | — | GET list, GET one, PATCH/PUT, DELETE |
+| `201` | — | POST create |
+| `400` | `invalid_json` | Body is not JSON |
+| `400` | `validation_error` | Missing title, empty title, or bad `status` |
+| `400` | `invalid_query` | `?status=` is not `todo` / `doing` / `done` |
+| `401` | `unauthorized` | Missing or wrong `X-API-Key` on a write |
+| `404` | `not_found` | Unknown UUID, or path the server does not know |
+| `500` | `server_misconfigured` | `API_KEY` env is empty |
+| `500` | `internal_error` | Uncaught exception |
+
+A non-UUID id on `/api/v1/tasks/{id}` is `404` with `No route for GET /api/v1/tasks/1` — the UUID regex never matches, so it is not "task missing", it is "no such route".

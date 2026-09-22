@@ -68,6 +68,11 @@ const config = {
             position: 'left',
           },
           {
+            to: '/docs/api/overview',
+            label: 'API',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/Brayden-Code-4/TW4',
             label: 'GitHub',
             position: 'right',
@@ -84,6 +89,7 @@ const config = {
               {label: 'Installation', to: '/docs/installation'},
               {label: 'User guide', to: '/docs/user-guide'},
               {label: 'Developers', to: '/docs/developer/overview'},
+              {label: 'API', to: '/docs/api/overview'},
             ],
           },
           {
